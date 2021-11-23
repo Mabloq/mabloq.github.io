@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="GitLab Pages">
+  <title>Plain HTML site using GitLab Pages</title>
+  <link rel="stylesheet" href="styles/style.css">
+  <link rel="stylesheet" href="styles/activepo.css">
+  <link rel="stylesheet" href="styles/uploadcsv.css"> <!-- Upload Stylesheet:Added-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        rel="stylesheet">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+  <link href="libs/dropzone/dropzone.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="libs/notyf.css">
+  <style>
+    #sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+    #sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+    #sortable li span { position: absolute; margin-left: -1.3em; }
+  </style>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="libs/dropzone/dropzone.min.js"></script>
+</head>
+<body style="font-family: 'Quicksand', sans-serif;">
+<div class="body-container">
+  
+  <div id="timer">
+    <span>Time To Close: <span id="timerValue"></span></span>
+  </div>
+
+  <div class="search-container">
+    <input type="text" id="search-input" placeholder="Search" style="width: 400px;"/>
+    <select id="search-select">
+      <option>Search All</option>
+      <option>Included</option>
+      <option>Alternative</option>
+      <option>Upload</option>
+    </select>
+  </div>
+  <div id="record-info"><span id="record-info-text">Quote is not selected</span><div id="remove-active-quote" style="display: none">X</div></div>
+  <ul id='order-list' class='order-list' style="padding: 10px; margin: 0"></ul>
+  <div id="upload-container" class="upload-container" style="display: none">
+    <div class="file-name-container" style="display: none"><span id="file-name"></span><span id="remove-selected-file">&times;</span></div>
+    <div class="close-upload-button">X</div>
+    <div class="dropzone-container">
+      <form action="/file-upload"
+            class="dropzone"
+            id="my-awesome-dropzone"></form>
+    </div>
+    <div style="width:100%; height:430px;" id="mxup-container"></div>
+    <div style="width:100%" id="mx-add-quote-container"><span id="mx-add-quote">Add to Quote</span></div>
+    <div id="download-template-link"><a href="https://maxlite.com/applets/maxlite_catalog/upload_template.csv">Download Template</a></div>
+  </div><!-- Upload Render Location:Added-->
+  <div id="active-po-container" class="active-po-container" style="display: none"></div>
+  <div class="footer">
+    <button id="reorder-lines-button" style="display: none">Reorder</button>
+    <button id="delete-lines-button" style="display: none">Bulk Delete</button>
+    <button id="cancel-delete-lines-button" style="display: none">Cancel</button>
+  </div>
+</div>
+<div id="global-loading" style="display: none; background-image: url('assets/loading.svg')"></div>
+<script src="libs/notyf.js"></script>
+<script src="libs/lib_promise.js"></script>
+<script src="libs/papaparse.min.js"></script> <!-- CSV parser: Dependency Added-->
+<script src="libs/maxlite_upload.js"></script> <!-- DataQuality Check + Rendering of Uploaded Items-->
+<script src="JS/applet_service.js"></script>
+<script>
+  Dropzone.options.myAwesomeDropzone = {
+    // Note: using "function()" here to bind `this` to
+    // the Dropzone instance.
+    init: function() {
+      let myDropZone = this;
+      this.on("addedfile", file => {
+        uploadCsv(file, myDropZone);
+        console.log("A file has been added");
+        file.previewElement.addEventListener("click", function() {
+          myDropZone.removeFile(file);
+        });
+      });
+
+    },
+    dictDefaultMessage: "Click or Drop file here to upload",
+    acceptedFiles: `.csv`
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.0/moment.min.js"
+        integrity="sha512-Izh34nqeeR7/nwthfeE0SI3c8uhFSnqxV0sI9TvTcXiFJkMd6fB644O64BRq2P/LA/+7eRvCw4GmLsXksyTHBg=="
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-duration-format/2.3.2/moment-duration-format.min.js"
+        integrity="sha512-ej3mVbjyGQoZGS3JkES4ewdpjD8UBxHRGW+MN5j7lg3aGQ0k170sFCj5QJVCFghZRCio7DEmyi+8/HAwmwWWiA=="
+        crossorigin="anonymous"></script>
+<script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/js/autoComplete.min.js"></script>
+<script src="https://unpkg.com/libphonenumber-js@1.8.5/bundle/libphonenumber-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+<script charset="utf-8">
+  startupService();
+</script>
+</body>
+</html>
