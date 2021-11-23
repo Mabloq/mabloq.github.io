@@ -31,7 +31,7 @@ let cleanQuoteGlobals = () => {
 
 const SERVICE = {
     name: 'FreeAgentService',
-    appletId: `aHR0cHM6Ly9tYXhsaXRlLmNvbS9wdWIvcHJvZC1hcHBsZXQv`,
+    appletId: `aHR0cHM6Ly9tYWJsb3EuZ2l0aHViLmlvL2ZyZWVhZ2VudC1hcHBsZXQv`,
 };
 
 let config = {
