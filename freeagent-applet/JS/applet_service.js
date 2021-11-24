@@ -187,6 +187,7 @@ function startupService() {
             countDownId = null;
         }
         timer = 300;
+        console.log(record)
         countDownId = setInterval(countDown, 1000);
         if (searchEl) {
             searchEl.value = '';
@@ -230,10 +231,10 @@ function startupService() {
 
 
 
-    FAClient.on("openStagingProducts", async ({ record }) => {
-        searchEl.value = '';
-        await openProducts(record, searchSelectEl).catch(e => console.log(e));
-    });
+    // FAClient.on("openStagingProducts", async ({ record }) => {
+    //     searchEl.value = '';
+    //     await openProducts(record, searchSelectEl).catch(e => console.log(e));
+    // });
 
     searchEl.addEventListener("keyup", async (event) => {
         if (event?.target?.value?.length > 2) {
