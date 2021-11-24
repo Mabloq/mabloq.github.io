@@ -889,7 +889,7 @@ async function generateUploadUI() {
     cleanList();
 
     let bodyContainer = document.querySelector('body');
-
+    linesGlobal = await listLineItems();
     document.getElementById('reorder-lines-button').style.display = "none";
 
     let uploadContainer = bodyContainer.querySelector(".upload-container");
@@ -962,7 +962,7 @@ function uploadCsv(file, myDropZone) {
                         if (skusNotFound.length > 0) {
                             notyf.alert(`Skus Not Found: ${skusNotFound.join(',')}`)
                         }
-
+                     
                         let lineItems = uploadedItems.mergeWithFAData(mxItems, faItems)
                         let approvalsNeeded = uploadedItems.neededApprovals(lineItems)
                         await addUploadedItems(lineItems, approvalsNeeded);
