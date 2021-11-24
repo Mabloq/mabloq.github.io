@@ -245,19 +245,19 @@ var MaxLiteUpload = (function () {
             return [...a, {
                 itemNumber: item.id?.replace(/\s/g, ''),
                 itemDescription: item.field_values.description.display_value,
-                itemType: uploadItem.itemType,
+                itemType: x.itemType,
                 alternativeTo,
-                commissionPercentOverwrite: parseFloat(uploadItem.commissionPercentOverwrite).toFixed(2),
-                commissionAmount: (parseFloat(uploadItem.commissionPercentOverwrite) * lineAmount).toFixed(2),
+                commissionPercentOverwrite: parseFloat(x.commissionPercentOverwrite).toFixed(2),
+                commissionAmount: (parseFloat(x.commissionPercentOverwrite) * lineAmount).toFixed(2),
                 aPrice: item.field_values.product_field2,
                 hotPrice: item.field_values.product_field3,
-                price: uploadItem.price,
+                price: x.price,
                 lineAmount: lineAmount,
-                quantity: uploadItem.quantity,
+                quantity: x.quantity,
                 lifeCycle: item.field_values.product_field9.display_value,
-                order: uploadItem.order,
-                typeText : uploadItem.typeText,
-                itemNo : uploadItem.itemNumber
+                order: x.order,
+                typeText : x.typeText,
+                itemNo : x.itemNumber
             } ];
         },[])
       
