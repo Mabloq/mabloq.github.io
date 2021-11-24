@@ -188,10 +188,10 @@ var MaxLiteUpload = (function () {
 
     }
 
-    MaxLiteUpload.prototype.getItemsFromHtml = function(){
+    MaxLiteUpload.prototype.getItemsFromHtml = function(linesGlobal){
         let items = document.querySelectorAll('.item-row');
         let itemList = []
-        let order = 0;
+        let order = linesGlobal.length;
         items.forEach((item, index)=> {
             order++;
             let itemData = JSON.parse(atob(item.dataset.item));
@@ -229,8 +229,7 @@ var MaxLiteUpload = (function () {
         return itemList;
     }
 
-    MaxLiteUpload.prototype.mergeWithFAData = function(mxUploadItems, listEntityResults, linesGlobal) {
-        console.log('Merge Data Lines Globale', linesGlobal)
+    MaxLiteUpload.prototype.mergeWithFAData = function(mxUploadItems, listEntityResults) {
 
         let itemsToUpload = mxUploadItems.reduce((a,x) => {
             let item = listEntityResults.find((faItem) => faItem.field_values.product_field0.display_value == x.itemNumber)

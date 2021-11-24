@@ -947,7 +947,7 @@ function uploadCsv(file, myDropZone) {
                     new_element.addEventListener('click', async (e) => {
                         loadingStart();
                         console.log('linesGlobal',linesGlobal)
-                        let mxItems = uploadedItems.getItemsFromHtml()
+                        let mxItems = uploadedItems.getItemsFromHtml(linesGlobal)
 
                         let faItems = await getUploadProducts(mxItems)
                         let itemNos = mxItems.map((item) => {
@@ -964,7 +964,7 @@ function uploadCsv(file, myDropZone) {
                             notyf.alert(`Skus Not Found: ${skusNotFound.join(',')}`)
                         }
                      
-                        let lineItems = uploadedItems.mergeWithFAData(mxItems, faItems, linesGlobal)
+                        let lineItems = uploadedItems.mergeWithFAData(mxItems, faItems)
                         let approvalsNeeded = uploadedItems.neededApprovals(lineItems)
                         await addUploadedItems(lineItems, approvalsNeeded);
                     })
@@ -1405,8 +1405,10 @@ function renderedReorderLines(lines) {
     let innerHTML = ``;
     lines.map(({ field_values, id }, index) => {
         let num = field_values?.quote_item_field0?.display_value;
+        let quantity = field_values?.quote_item_field14.display_value;
+        let price = field_values?.quote_item_field11.display_value;
         let description = field_values?.quote_item_field22?.display_value;
-        innerHTML += `<li class="reorder-element" style="color: white" data-id="${id}"><b style="white-space: pre-line"><span style="color: rgba(215, 217, 219, 1.00)"> (${num})</span> ${description} <span><img src="height_white_18dp.svg" alt=""/></span></b></li>`;
+        innerHTML += `<li class="reorder-element" style="color: white" data-id="${id}"><b style="white-space: pre-line"><span style="color: rgba(215, 217, 219, 1.00);padding: 5px;background:green"> ${num}</span> <span>Price: ${price}, Qty: ${quantity}</span><br> <p>${description}</p><span><img src="height_white_18dp.svg" alt=""/></span></b></li>`;
     })
     orderList.innerHTML = innerHTML;
     $("#order-list").sortable({
