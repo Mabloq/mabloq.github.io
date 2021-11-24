@@ -945,6 +945,7 @@ function uploadCsv(file, myDropZone) {
                     addToQuoteButton.parentNode.replaceChild(new_element, addToQuoteButton);
                     new_element.addEventListener('click', async (e) => {
                         loadingStart();
+                        console.log('linesGlobal',linesGlobal)
                         let mxItems = uploadedItems.getItemsFromHtml()
 
                         let faItems = await getUploadProducts(mxItems)
