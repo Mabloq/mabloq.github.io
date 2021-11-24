@@ -242,6 +242,8 @@ var MaxLiteUpload = (function () {
                 }
         
             }
+
+            let lineAmount = (parseFloat(parseInt(uploadItem.quantity)) * parseFloat(uploadItem.price)).toFixed(2);
             return [...a, {
                 itemNumber: item.id?.replace(/\s/g, ''),
                 itemDescription: item.field_values.description.display_value,
