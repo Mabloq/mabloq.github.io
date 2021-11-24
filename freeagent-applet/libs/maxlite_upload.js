@@ -200,9 +200,9 @@ var MaxLiteUpload = (function () {
             let itemObj = {
                 itemNumber: itemData.itemNumber ? itemData.itemNumber : null,
                 quantity: !!itemData.quantity ? itemData.quantity.replace(/\D/g,"") : 0,
-                price: !!itemData.price ? itemData.price.replace(/\D/g,"") : 0,
+                price: !!itemData.price ? itemData.price.replace(" ","").replace("$", "").replace(",", "") : 0,
                 alternativeTo: itemData.altItemFlag && itemData.altItemFlag == "Y" ? itemData.alternateItem : '',
-                commissionPercentOverwrite: !!itemData.commissionPercentOverwrite ? itemData.commissionPercentOverwrite.replace(/\D/g,"") : null,
+                commissionPercentOverwrite: !!itemData.commissionPercentOverwrite ? itemData.commissionPercentOverwrite.replace(" ","").replace("%", "") : null,
                 itemType: true,
                 typeText : !!itemData.typeText ? itemData.typeText : "",
                 order
