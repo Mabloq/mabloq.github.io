@@ -229,8 +229,8 @@ var MaxLiteUpload = (function () {
         return itemList;
     }
 
-    MaxLiteUpload.prototype.mergeWithFAData = function(mxUploadItems, listEntityResults) {
-
+    MaxLiteUpload.prototype.mergeWithFAData = function(mxUploadItems, listEntityResults, linesGlobal) {
+        console.log('Merge Data Lines Globale', linesGlobal)
 
         let itemsToUpload = mxUploadItems.reduce((a,x) => {
             let item = listEntityResults.find((faItem) => faItem.field_values.product_field0.display_value == x.itemNumber)
