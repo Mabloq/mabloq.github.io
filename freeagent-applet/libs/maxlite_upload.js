@@ -231,7 +231,36 @@ var MaxLiteUpload = (function () {
 
     MaxLiteUpload.prototype.mergeWithFAData = function(mxUploadItems, listEntityResults) {
         let uploadDictionary = mxUploadItems.reduce((a,x) => ({...a, [x.itemNumber]: x}), {})
-        console.log(uploadDictionary);
+
+        let itemsToUpload = mxUploadItems.reduce((a,x) => {
+            let item = listEntityResults.find((faItem) => faItems.field_values.product_field0.display_value == x.itemNumber)
+            let alternativeTo = '';
+            if(x?.alternativeTo !== '') {
+               
+                if(item.field_values.product_field0.display_value === uploadItem?.alternativeTo) {
+                    alternativeTo = item.id;
+                }
+        
+            }
+            return [...a, {
+                itemNumber: item.id?.replace(/\s/g, ''),
+                itemDescription: item.field_values.description.display_value,
+                itemType: uploadItem.itemType,
+                alternativeTo,
+                commissionPercentOverwrite: parseFloat(uploadItem.commissionPercentOverwrite).toFixed(2),
+                commissionAmount: (parseFloat(uploadItem.commissionPercentOverwrite) * lineAmount).toFixed(2),
+                aPrice: item.field_values.product_field2,
+                hotPrice: item.field_values.product_field3,
+                price: uploadItem.price,
+                lineAmount: lineAmount,
+                quantity: uploadItem.quantity,
+                lifeCycle: item.field_values.product_field9.display_value,
+                order: uploadItem.order,
+                typeText : uploadItem.typeText,
+                itemNo : uploadItem.itemNumber
+            } ];
+        },[])
+      
         let mappedQuoteItems = listEntityResults.map((item) => {
             let uploadItem = uploadDictionary[item.field_values.product_field0.display_value]
             let alternativeTo = '';
@@ -262,7 +291,8 @@ var MaxLiteUpload = (function () {
                 itemNo : uploadItem.itemNumber
             }
         })
-        return mappedQuoteItems;
+        console.log(itemsToUpload)
+        return itemsToUpload;
     }
 
     MaxLiteUpload.prototype.neededApprovals = function(mergedItems) {
