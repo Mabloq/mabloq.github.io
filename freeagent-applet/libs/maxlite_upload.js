@@ -233,7 +233,7 @@ var MaxLiteUpload = (function () {
         let uploadDictionary = mxUploadItems.reduce((a,x) => ({...a, [x.itemNumber]: x}), {})
 
         let itemsToUpload = mxUploadItems.reduce((a,x) => {
-            let item = listEntityResults.find((faItem) => faItems.field_values.product_field0.display_value == x.itemNumber)
+            let item = listEntityResults.find((faItem) => faItem.field_values.product_field0.display_value == x.itemNumber)
             let alternativeTo = '';
             if(x?.alternativeTo !== '') {
                
