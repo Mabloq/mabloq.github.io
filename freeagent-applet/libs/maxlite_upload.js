@@ -106,7 +106,7 @@ var MaxLiteUpload = (function () {
             let itemNumberNotMissing = this._private.items.every(item => !(item['Item #'] === ""));
             let qtyNotMissingOrNaN = this._private.items.every(item => !(isNaN(item['Quantity']) || item['Quantity'] === ""));
             let priceNotMissingOrNaN = this._private.items.every(item => {
-                if(isNaN(item["Unit Price"])) {
+                if(isNaN(item["Unit Price"].replace("$", "").replace(",", ""))) {
                     return false
                 }
                 if(item["Unit Price"] == "") {
@@ -230,39 +230,33 @@ var MaxLiteUpload = (function () {
     }
 
     MaxLiteUpload.prototype.mergeWithFAData = function(mxUploadItems, listEntityResults) {
-
-        let itemsToUpload = mxUploadItems.reduce((a,x) => {
-            let item = listEntityResults.find((faItem) => faItem.field_values.product_field0.display_value == x.itemNumber)
+        const mappedQuoteItems = mxUploadItems.map((uploadItem) => {
+            const item = listEntityResults.find((item) => item.field_values.product_field0.display_value === uploadItem.itemNumber);
+            const lineAmount = (parseFloat(parseInt(uploadItem.quantity)) * parseFloat(uploadItem.price)).toFixed(2);
             let alternativeTo = '';
-            if(x?.alternativeTo !== '') {
-               
-                if(item.field_values.product_field0.display_value === uploadItem?.alternativeTo) {
-                    alternativeTo = item.id;
-                }
-        
+            if(uploadItem?.alternativeTo !== '') {
+                alternativeTo = listEntityResults.find(item => item.field_values.product_field0.display_value === uploadItem?.alternativeTo).id;
             }
-
-            let lineAmount = (parseFloat(parseInt(x.quantity)) * parseFloat(x.price)).toFixed(2);
-            return [...a, {
+            return {
                 itemNumber: item.id?.replace(/\s/g, ''),
                 itemDescription: item.field_values.description.display_value,
-                itemType: x.itemType,
+                itemType: uploadItem.itemType,
                 alternativeTo,
-                commissionPercentOverwrite: parseFloat(x.commissionPercentOverwrite).toFixed(2),
-                commissionAmount: (parseFloat(x.commissionPercentOverwrite) * lineAmount).toFixed(2),
+                commissionPercentOverwrite: parseFloat(uploadItem.commissionPercentOverwrite).toFixed(2),
+                commissionAmount: (parseFloat(uploadItem.commissionPercentOverwrite) * lineAmount).toFixed(2),
                 aPrice: item.field_values.product_field2,
                 hotPrice: item.field_values.product_field3,
-                price: x.price,
+                price: uploadItem.price,
                 lineAmount: lineAmount,
-                quantity: x.quantity,
+                quantity: uploadItem.quantity,
                 lifeCycle: item.field_values.product_field9.display_value,
-                order: x.order,
-                typeText : x.typeText,
-                itemNo : x.itemNumber
-            } ];
-        },[])
-        console.log(itemsToUpload)
-        return itemsToUpload;
+                order: uploadItem.order,
+                typeText : uploadItem.typeText,
+                itemNo : uploadItem.itemNumber
+            };
+        });
+
+        return mappedQuoteItems;
     }
 
     MaxLiteUpload.prototype.neededApprovals = function(mergedItems) {
