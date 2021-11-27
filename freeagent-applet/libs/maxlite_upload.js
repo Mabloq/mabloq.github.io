@@ -71,8 +71,8 @@ var MaxLiteUpload = (function () {
         let errors =  {
             "Item #": item['Item #'] === "",
             "Quantity": isNaN(item['Quantity']) || item['Quantity'] === "",
-            "Unit Price": isNaN(item["Unit Price"]) || item["Unit Price"] == "",
-            "Rep Commission": isNaN(item["Rep Commission"]) || item["Rep Commission"] == "",
+            "Unit Price": isNaN(item["Unit Price"].replace("$", "").replace(",", "")) || item["Unit Price"] == "",
+            "Rep Commission": isNaN(item["Rep Commission"].replace("%", '')) || item["Rep Commission"] == "",
             "User Item Type": false,
             "Alt. Item Flag (Y/N)": !(['Y','N', '', null].includes(item["Alt. Item Flag (Y/N)"])),
         };
@@ -159,7 +159,7 @@ var MaxLiteUpload = (function () {
         let itemsHtml = this._private.items.map((item) => {
             let itemErrors = this.itemErrors(item);
             let itemCells = Object.keys(this.uploadMap).map((header)=>{
-                return header in item ? `<td style="width:${this.widthMap[header]};${itemErrors[header] ? 'background: rgba(255, 69, 0, 0.72);color:white' : ''}" class="upload-po-cell" >${item[header]}</td>` : '';
+                return header in item ? `<td style="width:${this.widthMap[header]};${itemErrors[header] ? 'background: rgba(255, 69, 0, 0.72);color:white' : ''}" class="upload-po-cell" >${item[header] == "" ? "blank" : item[header]}</td>` : '';
 
             }).join('');
             return `<tr class="upload-po-row item-row" data-item="${btoa(JSON.stringify(item))}">${itemCells}</tr>`;

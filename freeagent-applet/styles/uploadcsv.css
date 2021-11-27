@@ -119,13 +119,14 @@
     align-items: center;
     flex-direction: column;
     background-color:#455560;
-    margin: 0;
+    margin: 5px 0;
     padding: 0;
     border-radius: 5px;
     display: flex;
     height: 100%;
     overflow-y: scroll;
-    width: 100%;
+    width: 80%;
+    
 }
 
 .upload-po-row.header-row {
