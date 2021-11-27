@@ -936,6 +936,7 @@ function uploadCsv(file, myDropZone) {
                 let itemsWCommissions = await getBulkCommissions(results.data);
                 uploadedItems = new MaxLiteUpload({ items: itemsWCommissions });
                 let dataQualityCheck = uploadedItems.dataQualityCheck()
+                console.log('Data Quality Check', dataQualityCheck)
                 if (dataQualityCheck[0]) {
                     uploadContainer.querySelector('#mx-add-quote-container').style.display = 'block';
                     let addToQuoteContainer = document.getElementById("mx-add-quote").style.display = 'block';
@@ -971,10 +972,12 @@ function uploadCsv(file, myDropZone) {
                     uploadContainer.querySelector('.dropzone-container').style.display = 'none';
                     myDropZone.removeFile(file);
                 } else {
-                    uploadContainer.querySelector('#mx-add-quote-container').style.display = 'block';
+                    console.log("error parsing upload file")
+                    uploadContainer.querySelector('#mx-add-quote-container').style.display = 'none';
                     document.getElementById("mx-add-quote").style.display = 'none';
                     let mxupContainer = document.getElementById("mxup-container")
                     mxupContainer.innerHTML = `${uploadedItems.getItemsHtml()}<div style="padding: 15px;color:white;background:red">${dataQualityCheck[1]} </div><p style="color:white">* Click "x" next to filename to try again</p>`;
+                    console.log("Should have displayed error information")
                     uploadContainer.querySelector('.dropzone-container').style.display = 'none';
                     myDropZone.removeFile(file);
                 }
