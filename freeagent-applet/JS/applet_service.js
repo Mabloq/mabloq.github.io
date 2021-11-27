@@ -914,6 +914,7 @@ async function generateUploadUI() {
 function uploadCsv(file, myDropZone) {
     try {
         let uploadedItems = {};
+        console.log("uploaded?")
         let data = Papa.parse(file, {
             skipEmptyLines: true,
             header: true,
